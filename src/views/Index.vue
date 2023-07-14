@@ -1,18 +1,21 @@
 <template>
-  <Data-Table :config="table_config.config" :colunms="table_config.columns" :request="table_config.request"></Data-Table>
+  <div>
+    <BaseTable @onload="handlerOnload" :columns="table_config.table_header" :config="table_config.config" :request="table_config.request">
+      <template v-slot:operation="slotData">
+        <el-button type="danger" size="small" @click="handlerDetailed(slotData.data.id)"> 编辑</el-button>
+        <el-button size="small" @click="deleteConfirm(slotData.data.id)"> 删除</el-button>
+      </template>
+    </BaseTable>
+  </div>
 </template>
 
 <script setup>
-
-import {reactive} from "vue";
-
-import DataTable from "@/components/data-table";
-
+import BaseTable from "@/components/table";
 import { getDate } from "@/utils/common";
-
+import { reactive } from "vue";
 
 const table_config = reactive({
-  columns: [
+  table_header: [
     { label: "标题", prop: "title", type: "text", width: "500" },
     { label: "类别", prop: "category_name", type: "text", width: "200" },
     {
@@ -20,6 +23,7 @@ const table_config = reactive({
       prop: "createDate",
       type: "function",
       callback: (row) => {
+        // alert(row.currentDate);
         return getDate({ value: row.currentDate * 1000 });
       },
     },
@@ -40,9 +44,14 @@ const table_config = reactive({
     url: "info",
     data: {
       pageNumber: 1,
-      pageSize: 10,
+      pageSize: 1,
     },
   },
 });
 
+function handlerOnload(data) {
+  // console.log(data);
+}
 </script>
+
+<style></style>

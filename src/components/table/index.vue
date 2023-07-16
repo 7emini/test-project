@@ -11,7 +11,7 @@
           <el-table-column v-if="header.type === 'switch'" :label="header.label" :width="header.width">
             <template #default="scope">
               <!-- <el-switch v-model="scope.row[header.prop]" :loading="scope.row.loading"></el-switch> -->
-              <Switch :data="scope.row" :config="header" v-model="scope.row[header.prop]"></Switch>
+              <Switch :data="scope.row" :config="header" :key="scope.row"></Switch>
               <!-- <Test v-model="scope.row[header.prop]"></Test> -->
             </template>
           </el-table-column>

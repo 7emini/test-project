@@ -1,19 +1,15 @@
 <template>
-  <el-switch :model-value = "modelValue" :loading="init_data.loading" :before-change="handlerSwitch"> </el-switch>
+  <el-switch v-model="init_data.value" :loading="init_data.loading" :before-change="handlerSwitch"> </el-switch>
 </template>
 
 <script setup>
-import { reactive, getCurrentInstance, watchEffect, watch, ref, emit } from "vue";
+import { reactive, getCurrentInstance} from "vue";
 
-import { SwitchStatus } from "@/apis/common";
+import { CommonApi} from "@/apis/common";
 import ApiUrl from "@/apis/requestUrl";
 
 const props = defineProps({
 
-  modelValue: {
-    type: Boolean,
-    default: false,
-  },
   data: {
     type: Object,
     default: () => { },
@@ -35,15 +31,6 @@ const init_data = reactive({
 });
 
 
-const internalValue = ref(props.modelValue);
-
-watch(internalValue, (newValue) => {
-  emit('update:modelValue', newValue);
-});
-
-function updateModelValue(value) {
-  internalValue.value = value;
-}
 
 
 function handlerSwitch(value) {
@@ -73,10 +60,10 @@ function handlerSwitch(value) {
 
 
   return new Promise((resolve, reject) => {
-    SwitchStatus(request_data)
+    CommonApi(request_data)
       .then((response) => {
         proxy.$message.success(response.message);
-        data.status = value;
+        data[config.prop] = value;
         init_data.loading = false;
         resolve(response);
       })

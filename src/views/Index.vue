@@ -1,21 +1,17 @@
 <template>
   <div>
-    <BaseTable @onload="handlerOnload" :columns="table_config.table_header" :config="table_config.config" :request="table_config.request">
-      <template v-slot:operation="slotData">
-        <el-button type="danger" size="small" @click="handlerDetailed(slotData.data.id)"> 编辑</el-button>
-        <el-button size="small" @click="deleteConfirm(slotData.data.id)"> 删除</el-button>
-      </template>
+    <BaseTable :table_columns="table_data.columns" :table_config="table_data.config" :request_config="table_data.request">
     </BaseTable>
   </div>
 </template>
 
 <script setup>
-import BaseTable from "@/components/table";
+import BaseTable from "@/components/data/table";
 import { getDate } from "@/utils/common";
 import { reactive } from "vue";
 
-const table_config = reactive({
-  table_header: [
+const table_data = reactive({
+  columns: [
     { label: "标题", prop: "title", type: "text", width: "500" },
     { label: "类别", prop: "category_name", type: "text", width: "200" },
     {
@@ -36,15 +32,15 @@ const table_config = reactive({
     },
   ],
   config: {
-    selection: true,
-    batch_delete: true,
-    pagination: true,
+    use_selection: true,
+    use_batch_delete: false,
+    use_pagination: true,
   },
   request: {
     url: "info",
     data: {
       pageNumber: 1,
-      pageSize: 1,
+      pageSize: 10,
     },
   },
 });

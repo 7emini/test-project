@@ -1,5 +1,5 @@
 export function getToken() {
-  return "61d86550ad4070554c0f4d791ca52748";
+  return "06ddb2b96b3339bcd13ffba71682b6d5";
 }
 
 

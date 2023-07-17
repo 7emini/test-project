@@ -38,7 +38,7 @@
     <el-row class="margin-top-30">
       <!--批量删除按钮-->
       <el-col :span="10">
-        <el-button :disabled="!response_table_data.data_id" size="small"  @click="handlerDelete('batch')" v-if="config.use_batch_delete" type="danger">批量删除</el-button>
+        <el-button :disabled="!response_table_data.data_id" size="small"  @click="handlerDelete('batch')" v-if="config.use_batch_delete" >批量删除</el-button>
       </el-col>
 
       <!--分页-->

@@ -35,9 +35,11 @@ const current_page = ref(1);
 const page_size = ref(props.pageSize);
 
 const total = ref(props.total);
+
 watchEffect(() => {
   total.value = props.total;
 });
+
 function handlerSizeChange(val) {
   page_size.value = val;
   current_page.value = 1;

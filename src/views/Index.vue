@@ -1,6 +1,9 @@
 <template>
   <div>
     <BaseTable :table_columns="table_data.columns" :table_config="table_data.config" :request_config="table_data.request">
+      <template v-slot:operation="soltData">
+        <el-button type="danger" size="small" @click="handlerDetailed(soltData.data.id)">编辑</el-button>
+      </template>
     </BaseTable>
   </div>
 </template>
@@ -19,7 +22,6 @@ const table_data = reactive({
       prop: "createDate",
       type: "function",
       callback: (row) => {
-        // alert(row.currentDate);
         return getDate({ value: row.currentDate * 1000 });
       },
     },
@@ -28,16 +30,18 @@ const table_data = reactive({
       label: "操作",
       type: "slot",
       slot_name: "operation",
+      delete_elem: true,
       width: "200",
     },
   ],
   config: {
     use_selection: true,
-    use_batch_delete: false,
+    use_batch_delete: true,
     use_pagination: true,
   },
   request: {
     url: "info",
+    delete_key: "id",
     data: {
       pageNumber: 1,
       pageSize: 10,

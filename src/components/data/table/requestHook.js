@@ -1,13 +1,18 @@
-import { reactive } from "vue";
+import { reactive, getCurrentInstance } from "vue";
 import { CommonApi } from "@/apis/common";
 import RequestUrl from "@/apis/requestUrl";
+import aipUrl from "@/apis/requestUrl";
 
 export function requestHook() {
+
+    const { proxy } = getCurrentInstance();
+
     // 请求配置
     let request_config = {
         url: "",
         method: "",
         data: {},
+        delete_key: "id",
     }
 
     // 响应数据
@@ -15,6 +20,7 @@ export function requestHook() {
         data: [],
         total: 0,
         loading: false,
+        data_id: "",
     });
 
     /**
@@ -35,7 +41,10 @@ export function requestHook() {
         if (!request_config.url) {
             return false;
         }
+        return loadData();
+    }
 
+    const loadData = ()=>{
         // 获取默认配置的url
         const url = RequestUrl[request_config.url]?.list?.url;
         // 获取默认配置的请求方式
@@ -63,5 +72,54 @@ export function requestHook() {
         });
     }
 
-    return { response_table_data, requestTableData }
+
+    /**
+     * 保存当前选中的数据ID
+     * @param {*} value 
+     */
+    const saveDataId = (value) => {
+        const isArray = Array.isArray(value);
+        if (!isArray) {
+            response_table_data.data_id = value[request_config.delete_key];
+        } else {
+            response_table_data.data_id = value.length > 0 ? value.map(item => item[request_config.delete_key]).join() : "";
+        }
+    }
+
+    function handlerDeleteConfirm(value) {
+        proxy.deleteConfirm({
+            thenFun: () => {
+                return deleteRow(value);
+            },
+        });
+    }
+
+    function deleteRow() {
+
+        const url = aipUrl?.[request_config.url]?.delete?.url;
+        const method = aipUrl?.[request_config.method]?.delete?.method || "post";
+        if (!url) {
+            return false;
+        }
+
+        const reqeust_params = {
+            url,
+            method,
+            data: { id: response_table_data.data_id },
+        }
+        return new Promise((resolve, reject) => {
+            CommonApi(reqeust_params).then(response => {
+                proxy.$message.success(response.message);
+                loadData();
+                response_table_data.data_id = "";
+                resolve(response);
+            }).catch(error => {
+                reject(error)
+            });
+        });
+    }
+
+
+
+    return { response_table_data, requestTableData, saveDataId, handlerDeleteConfirm }
 }

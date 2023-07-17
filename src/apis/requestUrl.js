@@ -7,6 +7,10 @@ const aipUrl = {
         info_status: {
             url: "/news/status/",
             method: "post"
+        },
+        delete: {
+            url: "/news/delete/",
+            method: "post",
         }
     }
 }

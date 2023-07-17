@@ -12,6 +12,12 @@ const aipUrl = {
             url: "/news/delete/",
             method: "post",
         }
+    },
+    cascader: {
+        category:{
+            url:"/news/getCategoryAll/",
+            method:"post",
+        }
     }
 }
 

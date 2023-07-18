@@ -7,3 +7,11 @@ export function CommonApi(params) {
         data: params.data, 
     });
 }
+
+export function uploadFile(data = {}) {
+    return instance.request({
+      method: "post",
+      url: "/upload",
+      data,
+    });
+  }

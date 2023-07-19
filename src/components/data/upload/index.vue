@@ -5,7 +5,7 @@
   </el-upload>
 </template>
 <script setup>
-import { reactive } from "vue";
+import { onMounted, reactive, watch } from "vue";
 import { uploadFile } from "@/apis/common";
 
 const props = defineProps({
@@ -40,6 +40,15 @@ function handlerOnSuccess(val) {
 function handlerBeforeOnUpload(val) {
     console.log(val);
 }
+
+watch(()=>props.imageUrl, (newValue, oldValue)=>{
+  console.log(newValue);
+  data.image_url = newValue;
+});
+
+onMounted(()=>{
+  data.image_url = props.imageUrl;
+})
 </script>
 
 

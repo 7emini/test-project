@@ -1,10 +1,12 @@
 <template>
-  <DataForm :items="form_config.form_items" :buttons="form_config.form_buttons" :field="form_config.form_data"></DataForm>
+  <DataForm :items="form_config.form_items" :buttons="form_config.form_buttons" :field="form_config.form_data" :hidden="form_config.form_hidden" @callback="handlerSubmitForm"></DataForm>
 </template>
 
 <script setup>
+import { getDetailed } from "@/apis/info";
 import DataForm from "@/components/data/form";
-import { reactive } from "vue";
+import { dataType } from "element-plus/es/components/table-v2/src/common";
+import { onBeforeMount, reactive } from "vue";
 
 const form_config = reactive({
   form_items: [
@@ -18,7 +20,7 @@ const form_config = reactive({
       },
       url: "category",
     },
-    { label: "信息标题", prop: "title", type: "input", placeholder: "请输入标题", width: "300px", max_length: 50, min_length: 1 },
+    { label: "信息标题", prop: "title", type: "input", placeholder: "请输入标题", width: "300px", max_length: 50, min_length: 1, required: true, message: "请务必输入标题！", rules: [{ min: 3, max: 20, message: "长度在3到20个字符", trigger: "change" }] },
     { label: "缩略图", prop: "image_url", type: "upload" },
     { label: "发布日期", prop: "create_date", type: "date" },
     {
@@ -27,7 +29,11 @@ const form_config = reactive({
       type: "radio",
       options: [
         { value: "1", label: "是" },
-        { value: "2", label: "否" },
+        { value: "0", label: "否" },
+      ],
+      relation_hidden: [
+        ["title", { "1": false, "0": true }],
+        ["image_url", { "1": false, "0": true }],
       ],
     },
     {
@@ -58,39 +64,57 @@ const form_config = reactive({
     {
       label: "提交",
       type: "danger",
-      key:"submit",
+      key: "submit",
     },
     {
       label: "重置",
-      type:"primary",
-      key:"reset",
+      type: "primary",
+      key: "reset",
     },
     {
       label: "关闭",
-      type:"primary",
-      key:"close",
-      callback: ()=>{
-        handlerClose()
-      }
-    }
+      type: "primary",
+      key: "close",
+      callback: () => {
+        handlerClose();
+      },
+    },
   ],
 
   form_data: {
-    category_id:"",
-    title:"",
-    image_url:"",
-    create_date:"",
-    start_date:"",
-    end_date:"",
-    status:"",
-    content:"",
-    city:["2", "3"],
-  }
+    category_id: "",
+    title: "",
+    image_url: "",
+    create_date: "",
+    start_date: "",
+    end_date: "",
+    status: "",
+    content: "",
+    city: ["2", "3"],
+  },
+
+  form_hidden: {
+    category_id: false,
+  },
 });
 
 function handlerClose() {
-    alert("close");
+  alert("close");
 }
+
+function handlerGetDetail(id) {
+  getDetailed({ id }).then((response) => {
+    form_config.form_data = response.data;
+  });
+}
+
+function handlerSubmitForm() {
+  console.log("添加数据");
+}
+
+onBeforeMount(() => {
+  handlerGetDetail("1173");
+});
 </script>
 
 <style></style>

@@ -4,7 +4,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, reactive } from "vue";
+import { onBeforeMount, reactive, watch } from "vue";
 import { CommonApi } from "@/apis/common";
 import apiUrl from "@/apis/requestUrl";
 
@@ -63,6 +63,8 @@ const handlerChange = (value) => {
   const val = value.length !== 0 ? value[value.length - 1] : "";
   emit("update:value", val);
 };
+
+watch(()=>props.value, (newValue)=> data.value = newValue)
 
 onBeforeMount(() => {
   getData();
